@@ -21,3 +21,12 @@ def cadastrar_produto():
         conn.commit()
 
     print("Produto cadastrado com sucesso!")
+
+    def excluir_produto():
+    id_produto = int(input("Informe o ID do produto a ser excluído: "))
+    
+    with engine.connect() as conn:
+        conn.execute(text("DELETE FROM produtos WHERE id=:id"), {"id": id_produto})
+        conn.commit()
+
+    print("🗑️ Produto excluído com sucesso!")
