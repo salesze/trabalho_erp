@@ -142,3 +142,31 @@ def dashboard():
         title="Valor por Categoria"
     )
     plt.show()
+
+def menu():
+    while True:
+        print("\n===== MENU ERP ESTOQUE =====")
+        print("1. Cadastrar Produto")
+        print("2. Excluir Produto")
+        print("3. Movimentar Estoque")
+        print("4. Mostrar Relatório")
+        print("5. Curva ABC")
+        print("6. Comparar Categorias")
+        print("7. Dashboard com Gráficos")
+        print("8. Sair")
+
+        opcao = input("Escolha: ")
+
+        if opcao == "1": cadastrar_produto()
+        elif opcao == "2": excluir_produto()
+        elif opcao == "3": movimentar_estoque()
+        elif opcao == "4": mostrar_relatorio()
+        elif opcao == "5": curva_abc()
+        elif opcao == "6": comparar_categorias()
+        elif opcao == "7": dashboard()
+        elif opcao == "8":
+            print("Encerrando...")
+            break
+        else:
+            print("Opção inválida.")
+
