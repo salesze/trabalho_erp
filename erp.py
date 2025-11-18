@@ -81,3 +81,30 @@ def mostrar_relatorio():
         if p["quantidade"] < 5:
             msg += " ESTOQUE BAIXO"
         print(msg)
+
+def curva_abc():
+    df = pd.read_sql("SELECT * FROM produtos", engine)
+
+    if df.empty:
+        print("Nenhum produto.")
+        return
+
+    df["valor_total"] = df["preco"] * df["quantidade"]
+    df = df.sort_values(by="valor_total", ascending=False)
+    soma = df["valor_total"].sum()
+
+    acumulado = 0
+    print("\n📈 Curva ABC:")
+
+    for _, row in df.iterrows():
+        acumulado += row["valor_total"]
+        perc = (acumulado / soma) * 100
+
+        if perc <= 80:
+            classe = "A"
+        elif perc <= 95:
+            classe = "B"
+        else:
+            classe = "C"
+
+        print(f'ID:{row["id"]} | {row["nome"]} | Valor:R${row["valor_total"]:.2f} | Classe:{classe}')
