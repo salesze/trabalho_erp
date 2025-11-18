@@ -66,3 +66,18 @@ def movimentar_estoque():
         conn.commit()
 
     print("Movimentação registrada.")
+
+def mostrar_relatorio():
+    df = pd.read_sql("SELECT * FROM produtos", engine)
+
+    print("\n📊 --- Relatório de Produtos ---")
+
+    if df.empty:
+        print("Nenhum produto cadastrado.")
+        return
+
+    for _, p in df.iterrows():
+        msg = f'ID:{p["id"]} | Nome:{p["nome"]} | Cat:{p["categoria"]} | Preço:R${p["preco"]:.2f} | Qtd:{p["quantidade"]} | Última Mov:{p["ultima_mov"]}'
+        if p["quantidade"] < 5:
+            msg += " ESTOQUE BAIXO"
+        print(msg)
