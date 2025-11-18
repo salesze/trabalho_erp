@@ -123,3 +123,22 @@ def comparar_categorias():
 
     resumo.plot(kind="bar", title="Comparação de Categorias")
     plt.show()
+
+def dashboard():
+    df = pd.read_sql("SELECT * FROM produtos", engine)
+
+    if df.empty:
+        print("Nenhum produto.")
+        return
+
+    df.plot(x="nome", y="quantidade", kind="bar", title="Estoque por Produto")
+    plt.show()
+
+    df["valor_total"] = df["preco"] * df["quantidade"]
+
+    df.groupby("categoria")["valor_total"].sum().plot(
+        kind="pie",
+        autopct="%1.1f%%",
+        title="Valor por Categoria"
+    )
+    plt.show()
