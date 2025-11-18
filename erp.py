@@ -108,3 +108,18 @@ def curva_abc():
             classe = "C"
 
         print(f'ID:{row["id"]} | {row["nome"]} | Valor:R${row["valor_total"]:.2f} | Classe:{classe}')
+
+def comparar_categorias():
+    df = pd.read_sql("SELECT * FROM produtos", engine)
+
+    if df.empty:
+        print("Nenhum produto.")
+        return
+
+    resumo = df.groupby("categoria")["quantidade"].sum()
+
+    print("\n📊 Comparação de Categorias:")
+    print(resumo)
+
+    resumo.plot(kind="bar", title="Comparação de Categorias")
+    plt.show()
