@@ -22,7 +22,7 @@ def cadastrar_produto():
 
     print("Produto cadastrado com sucesso!")
 
-    def excluir_produto():
+def excluir_produto():
     id_produto = int(input("Informe o ID do produto a ser excluído: "))
     
     with engine.connect() as conn:
@@ -30,3 +30,39 @@ def cadastrar_produto():
         conn.commit()
 
     print("🗑️ Produto excluído com sucesso!")
+
+def movimentar_estoque():
+    id_produto = int(input("Informe o ID do produto: "))
+    tipo = int(input("Tipo (1-Entrada, 2-Saída): "))
+    qtd = int(input("Quantidade: "))
+
+    with engine.connect() as conn:
+        df = pd.read_sql("SELECT * FROM produtos WHERE id=%s" % id_produto, conn)
+
+        if df.empty:
+            print("Produto não encontrado.")
+            return
+
+        quantidade_atual = int(df.loc[0, "quantidade"])
+
+        # Entrada
+        if tipo == 1:
+            nova_qtd = quantidade_atual + qtd
+        # Saída
+        elif tipo == 2:
+            if qtd > quantidade_atual:
+                print("Estoque insuficiente.")
+                return
+            nova_qtd = quantidade_atual - qtd
+        else:
+            print("Tipo inválido.")
+            return
+
+        datahora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        conn.execute(text(
+            "UPDATE produtos SET quantidade=:qtd, ultima_mov=:mov WHERE id=:id"
+        ), {"qtd": nova_qtd, "mov": datahora, "id": id_produto})
+        conn.commit()
+
+    print("Movimentação registrada.")
